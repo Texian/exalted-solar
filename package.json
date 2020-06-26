@@ -10,13 +10,14 @@
     "type": "git",
     "url": "git+https://github.com/Texian/exalted-solar.git"
   },
-  "author": "",
+  "author": "Christian Walters",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Texian/exalted-solar/issues"
   },
   "homepage": "https://github.com/Texian/exalted-solar#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "mongoose": "^5.9.19"
   }
 }
