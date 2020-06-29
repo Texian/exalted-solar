@@ -1,5 +1,4 @@
 const db = require ('./models');
-const { exists } = require('./models/Character');
 
 const character_list = [
     {
@@ -59,41 +58,51 @@ const caste_list = [
     {name: 'Eclipse'},    
 ];
 
-db.Caste.deleteMany({}, (err, castes) => {
-    console.log(`Deleted all castes`);
-    db.Caste.create(caste_list, (err, castes) => {
-        if (err) {
-            console.log(err);
-            return;
-        }
-        console.log(`Created ${castes.length} castes.`);
+const seedCharacters = async () => {
+    try {
+        await db.Caste.deleteMany({}, (err, castes) => {
+            console.log(`Deleted all castes`);
+            db.Caste.create(caste_list, (err, castes) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                console.log(`Created ${castes.length} castes.`);
 
-        db.Character.deleteMany({}, (err, characters) => {
-            console.log(`Deleted all characters`);
-            character_list.forEach((characterData) => { //Must be the last step
-                const character = new db.Character({
-                    name: characterData.name,
-                    caste: characterData.caste,
-                    anima: characterData.anima,
-                    description: characterData.description //TODO - add the rest
-                });
-                db.Caste.findOne({name: characterData.caste}, (err, foundCaste) => {
-                    console.log(`Found character ${character.name} with the caste ${foundCaste.name}`);
-                    if (err) {
-                        console.log(err);
-                        return;
-                    }
-                    character.caste = foundCaste;
-                    character.save((err, savedCharacter) => {
-                        if (err) {
-                            console.log(err);
-                            return;
-                        }
-                        console.log(`Saved ${savedCharacter.name} of ${foundCaste.name}`);
-                        process.exit();
+                db.Character.deleteMany({}, (err, characters) => {
+                    console.log(`Deleted all characters`);
+                    character_list.forEach((characterData) => { //Must be the last step
+                        const character = new db.Character({
+                            name: characterData.name,
+                            caste: characterData.caste,
+                            anima: characterData.anima,
+                            description: characterData.description,
+                            attributes: characterData.attributes, //TODO - add the rest
+                        });
+                        db.Caste.findOne({name: characterData.caste}, (err, foundCaste) => {
+                            console.log(`Found character ${character.name} with the caste ${foundCaste.name}`);
+                            if (err) {
+                                console.log(err);
+                                return;
+                            }
+                            character.caste = foundCaste;
+                            character.save((err, savedCharacter) => {
+                                if (err) {
+                                    console.log(err);
+                                    return;
+                                }
+                                console.log(`Saved ${savedCharacter.name} of ${foundCaste.name}`);
+                                process.exit();
+                            });
+                        });
                     });
                 });
             });
         });
-    });
-});
+    } catch (err) {
+        console.log(`Seed Characters error: ${err}`);
+        process.exit(1);
+    }
+}
+
+seedCharacters();

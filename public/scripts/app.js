@@ -13,7 +13,7 @@ $(document).ready(function () {
         error: handleError
     });
 
-    $('#newCharcterForm').on('submit', function (e) {
+    $('#newCharacterForm').on('submit', function (e) {
         e.preventDefault();
         console.log('New character serialized', $(this).serializeArray());
         $.ajax({
