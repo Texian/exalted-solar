@@ -12,4 +12,5 @@ mongoose.connect(DB_URI, {
 module.exports = {
     Character: require('./Character'),
     Caste: require('./Caste'),
+    User: require('./User')
 };
