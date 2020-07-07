@@ -1,4 +1,14 @@
 const db = require ('./models');
+const bcrypt = require('bcryptjs');
+const { characters } = require('./controllers');
+const SEED_USER_PASSWORD = '1234';
+
+const users = [
+    {
+        username: 'Testing',
+        email: 'testmail@testmail.com'
+    }
+];
 
 const character_list = [
     {
@@ -58,8 +68,28 @@ const caste_list = [
     {name: 'Eclipse'},    
 ];
 
+const seedUsers = async () => {
+    try {
+        await db.User.deleteMany({});
+        console.log(`Deleted all users`);
+        let user;
+        for (user of users) {
+            const hash = await bcrypt.hash(SEED_USER_PASSWORD, 10);
+            user.password = hash;
+            user = await db.User.create(user);
+        }
+        console.log(`Created test user`);
+        return user._id;
+    } catch (err) {
+        console.log(err);
+        process.exit(1);
+    }
+}
+
 const seedCharacters = async () => {
     try {
+        let userId = await seedUsers();
+        character_list.forEach(character => character.user = userId);
         await db.Caste.deleteMany({}, (err, castes) => {
             console.log(`Deleted all castes`);
             db.Caste.create(caste_list, (err, castes) => {

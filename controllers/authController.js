@@ -9,7 +9,7 @@ const register = (req, res) => {
     }
 
     if (!newUser.email || !newUser.password){
-        res.sendStatus(400);
+        res.sendStatus(400).send('Fields cannot be blank');
         return;
     }
 
@@ -57,11 +57,11 @@ const login = (req, res) => {
         password: req.body.password
     }
 
-    if (!user.email || !user.password) return res.sendStatus(400);
+    if (!user.email || !user.password) return res.sendStatus(400).send('Fields cannot be blank');
 
     db.User.findOne({email: user.email}, (err, foundUser) => {
         if (err) return res.status(500).json(err);
-        if (!foundUser) return res.status(400);
+        if (!foundUser) return res.status(400).send('User not found');
 
         bcrypt.compare(user.password, foundUser.password, (err, match) => {
             if (match) {

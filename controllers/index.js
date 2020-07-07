@@ -1,4 +1,5 @@
 module.exports = {
-    characters: require('./characters'),
-    auth: require('./auth'),
+    characters: require('./charactersController'),
+    auth: require('./authController'),
+    users: require('./usersController')
 }
